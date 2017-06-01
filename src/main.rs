@@ -18,6 +18,19 @@ pub fn ctc_imperative_generic<T: PartialEq>(a: &[T], b: &[T]) -> bool {
 }
 
 #[inline(never)]
+pub fn ctc_imperative_specialised(a: &[u8], b: &[u8]) -> bool {
+    if a.len() != b.len() {
+        return false;
+    }
+
+    let mut res: u8 = 0;
+    for i in 0..a.len() {
+        res |= a[i] ^ b[i];
+    }
+    res == 0
+}
+
+#[inline(never)]
 pub fn ctc_imperative_generic_no_bound_checking<T: PartialEq>(a: &[T], b: &[T]) -> bool {
     if a.len() != b.len() {
         return false;
@@ -89,6 +102,14 @@ mod tests {
         let r = test::black_box(vec![0; INPUT_LEN]);
 
         b.iter(|| ctc_imperative_generic(&l, &r));
+    }
+
+    #[bench]
+    fn bench_imperative_specialised(b: &mut Bencher) {
+        let l = test::black_box(vec![0; INPUT_LEN]);
+        let r = test::black_box(vec![0; INPUT_LEN]);
+
+        b.iter(|| ctc_imperative_specialised(&l, &r));
     }
 
     #[bench]
