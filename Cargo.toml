@@ -6,7 +6,3 @@ license = "MIT"
 description = "Benches of different constant-time comparison implementations in Rust"
 readme = "README.md"
 publish = false
-
-[dependencies]
-chrono = "^0.3.1"
-constant_time_eq = "^0.1.2"

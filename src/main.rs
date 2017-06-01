@@ -1,6 +1,5 @@
 #![feature(test)]
 
-extern crate constant_time_eq;
 extern crate test;
 
 
@@ -49,9 +48,19 @@ pub fn ctc_imperative_generic_no_bound_checking<T: PartialEq>(a: &[T], b: &[T]) 
 
 #[inline(never)]
 pub fn ctc_imperative_specialised_no_bound_checking(a: &[u8], b: &[u8]) -> bool {
-    use constant_time_eq::constant_time_eq;
+    if a.len() != b.len() {
+        return false;
+    }
 
-    constant_time_eq(a, b)
+    let len = a.len();
+    let a = &a[..len];
+    let b = &b[..len];
+
+    let mut res: u8 = 0;
+    for i in 0..len {
+        res |= a[i] ^ b[i];
+    }
+    res == 0
 }
 
 #[inline(never)]
